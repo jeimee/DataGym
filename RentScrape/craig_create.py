@@ -28,7 +28,8 @@ description_dict = {}
 attr_dict = {}
 attr_list = []
 description_list = []
-col_dict = {'title': title_list,
+col_dict = {'link': link_list,
+            'title': title_list,
             'price': price_list,
             'date': date_list,
             'sqfeet': sqft_list,
@@ -97,21 +98,19 @@ def craigs_roomrents(city='Provo'):
             num_images = len(link_soup.find_all('div', class_='slide'))
             num_images_list.append(num_images)
             description = link_soup.find('section', id='postingbody').text.strip()
-            #description_list.append(description)
             description_dict[link] = description
-            description_list.extend(list(description_dict.values()))
             attr = link_soup.find('p', class_='attrgroup').findNext('p').text.strip().replace('\n\n', ',')
             attr_dict[link] = attr
-            attr_list.extend(list(attr_dict.values()))
-            #attr_list.append(attr)
             print('individual scrape successful: ' + str(k))
             k += 1
             sleep(randint(1,4))
+    description_list.extend(list(description_dict.values()))
+    attr_list.extend(list(attr_dict.values()))
+
     # Now Create a data set
-    df = pd.DataFrame(link_list)
     for key, val in col_dict.items():
         df[key] = val
-    df.to_csv('craigs_roomrents.csv')
+    df.to_csv('craigs_roomrents_' + city + '.csv')
     print('Created a Craigslist dataset')
 
         #get the first part of list name without _list
